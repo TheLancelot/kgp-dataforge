@@ -1,0 +1,7 @@
+# winget install LiveKit.LiveKitCLI
+
+livekit-agents[google,rime,silero,turn-detector]
+livekit-plugins-noise-cancellation 
+python-dotenv
+
+# python -m livekit.agents download-files

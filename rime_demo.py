@@ -14,10 +14,13 @@ headers = {
 
 payload = {
     "text": "Hello! This is Rime speaking.",
-    "speaker": "celeste",
-    "modelId": "coda"
+    "text": "नमस्ते! यह Rime बोल रहा है। Tum kaise ho, my name is nishad",
+    # "speaker": "celeste",
+    # "modelId": "coda"
+  "speaker": "taru",
+  "modelId": "coda",
+  "lang": "hin"
 }
-
 data = json.dumps(payload).encode("utf-8")
 
 request = urllib.request.Request(
