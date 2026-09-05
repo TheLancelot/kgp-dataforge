@@ -3,5 +3,6 @@
 livekit-agents[google,rime,silero,turn-detector]
 livekit-plugins-noise-cancellation 
 python-dotenv
-
+uvicorn 
+fastapi
 # python -m livekit.agents download-files

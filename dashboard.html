@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>W&S Unit • Live SCADA Dashboard</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --border: #2a3544;
+      --text: #e6edf3;
+      --muted: #8b9cb3;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --red: #f85149;
+      --blue: #58a6ff;
+      --accent: #1f6feb;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .title span {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: #3d4f66;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge.ok { background: rgba(63, 185, 80, 0.15); color: var(--green); }
+    .badge.warn { background: rgba(210, 153, 34, 0.15); color: var(--yellow); }
+    .badge.danger { background: rgba(248, 81, 73, 0.15); color: var(--red); }
+
+    .value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .value {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .unit {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .bar-track {
+      height: 6px;
+      background: #243044;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease, background 0.3s;
+    }
+
+    .range {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .wide {
+      grid-column: 1 / -1;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .status-item {
+      background: #141c27;
+      border-radius: 8px;
+      padding: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .status-item .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .status-item .val {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .error {
+      background: rgba(248, 81, 73, 0.1);
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1>W&S Unit • Hydraulic Valve</h1>
+      <span>Continuous Casting • Live SCADA Mock</span>
+    </div>
+    <div class="status-pill">
+      <div class="status-dot" id="liveDot"></div>
+      <span id="connectionStatus">Connecting...</span>
+    </div>
+  </header>
+
+  <div class="error" id="errorBox">
+    Cannot reach SCADA API. Make sure <code>mock_scada.py</code> is running on port 8000.
+  </div>
+
+  <div class="grid">
+    <!-- Hydraulic Pressure -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Hydraulic Pressure</div>
+        <div class="badge ok" id="pressureBadge">Normal</div>
+      </div>
+      <div class="value-row">
+        <div class="value" id="pressureValue">--</div>
+        <div class="unit">bar</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" id="pressureBar" style="width:0%; background: var(--green);"></div>
+      </div>
+      <div class="range">
+        <span>0</span>
+        <span>180 bar</span>
+      </div>
+    </div>
+
+    <!-- Manifold Temperature -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Manifold Temperature</div>
+        <div class="badge ok" id="tempBadge">Normal</div>
+      </div>
+      <div class="value-row">
+        <div class="value" id="tempValue">--</div>
+        <div class="unit">°C</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" id="tempBar" style="width:0%; background: var(--green);"></div>
+      </div>
+      <div class="range">
+        <span>25</span>
+        <span>110 °C</span>
+      </div>
+    </div>
+
+    <!-- Accumulator Pressure -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Accumulator Pressure</div>
+        <div class="badge ok" id="accBadge">Normal</div>
+      </div>
+      <div class="value-row">
+        <div class="value" id="accValue">--</div>
+        <div class="unit">bar</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" id="accBar" style="width:0%; background: var(--blue);"></div>
+      </div>
+      <div class="range">
+        <span>50</span>
+        <span>180 bar</span>
+      </div>
+    </div>
+
+    <!-- Pinch Roll Position -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Pinch Roll Position</div>
+        <div class="badge ok" id="rollBadge">Normal</div>
+      </div>
+      <div class="value-row">
+        <div class="value" id="rollValue">--</div>
+        <div class="unit">mm</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" id="rollBar" style="width:0%; background: var(--blue);"></div>
+      </div>
+      <div class="range">
+        <span>0</span>
+        <span>50 mm</span>
+      </div>
+    </div>
+
+    <!-- Valve Stroke -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Valve Stroke (LVDT)</div>
+        <div class="badge ok" id="strokeBadge">Normal</div>
+      </div>
+      <div class="value-row">
+        <div class="value" id="strokeValue">--</div>
+        <div class="unit">%</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" id="strokeBar" style="width:0%; background: var(--blue);"></div>
+      </div>
+      <div class="range">
+        <span>0%</span>
+        <span>100%</span>
+      </div>
+    </div>
+
+    <!-- Status Overview -->
+    <div class="card wide">
+      <div class="card-header">
+        <div class="card-title">System Status</div>
+      </div>
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="label">Profibus Status</div>
+          <div class="val" id="profibusValue">--</div>
+        </div>
+        <div class="status-item">
+          <div class="label">Notes</div>
+          <div class="val" id="notesValue" style="font-size:0.95rem;">--</div>
+        </div>
+        <div class="status-item">
+          <div class="label">Last Update</div>
+          <div class="val" id="lastUpdate" style="font-size:0.95rem;">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:8000/sensors";
+
+    function setBadge(el, level) {
+      el.className = "badge " + level;
+      el.textContent = level === "ok" ? "Normal" : level === "warn" ? "Warning" : "Danger";
+    }
+
+    function updateBar(barEl, percent, color) {
+      barEl.style.width = Math.min(100, Math.max(0, percent)) + "%";
+      barEl.style.background = color;
+    }
+
+    function getPressureStatus(val) {
+      if (val < 20 || val > 160) return "danger";
+      if (val < 40 || val > 150) return "warn";
+      return "ok";
+    }
+
+    function getTempStatus(val) {
+      if (val > 90) return "danger";
+      if (val > 75) return "warn";
+      return "ok";
+    }
+
+    function getRollStatus(val) {
+      if (val > 40) return "danger";
+      if (val > 32) return "warn";
+      return "ok";
+    }
+
+    async function fetchData() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error("API error");
+        const data = await res.json();
+
+        document.getElementById("errorBox").style.display = "none";
+        document.getElementById("connectionStatus").textContent = "Live";
+        document.getElementById("liveDot").style.background = "var(--green)";
+
+        // Pressure
+        document.getElementById("pressureValue").textContent = data.hydraulic_pressure_bar.toFixed(1);
+        const pStatus = getPressureStatus(data.hydraulic_pressure_bar);
+        setBadge(document.getElementById("pressureBadge"), pStatus);
+        updateBar(
+          document.getElementById("pressureBar"),
+          (data.hydraulic_pressure_bar / 180) * 100,
+          pStatus === "danger" ? "var(--red)" : pStatus === "warn" ? "var(--yellow)" : "var(--green)"
+        );
+
+        // Temperature
+        document.getElementById("tempValue").textContent = data.manifold_temperature_c.toFixed(1);
+        const tStatus = getTempStatus(data.manifold_temperature_c);
+        setBadge(document.getElementById("tempBadge"), tStatus);
+        updateBar(
+          document.getElementById("tempBar"),
+          ((data.manifold_temperature_c - 25) / 85) * 100,
+          tStatus === "danger" ? "var(--red)" : tStatus === "warn" ? "var(--yellow)" : "var(--green)"
+        );
+
+        // Accumulator
+        document.getElementById("accValue").textContent = data.accumulator_pressure_bar.toFixed(1);
+        updateBar(document.getElementById("accBar"), (data.accumulator_pressure_bar / 180) * 100, "var(--blue)");
+
+        // Pinch Roll
+        document.getElementById("rollValue").textContent = data.pinch_roll_position_mm.toFixed(2);
+        const rStatus = getRollStatus(data.pinch_roll_position_mm);
+        setBadge(document.getElementById("rollBadge"), rStatus);
+        updateBar(
+          document.getElementById("rollBar"),
+          (data.pinch_roll_position_mm / 50) * 100,
+          rStatus === "danger" ? "var(--red)" : rStatus === "warn" ? "var(--yellow)" : "var(--blue)"
+        );
+
+        // Valve Stroke
+        document.getElementById("strokeValue").textContent = data.valve_stroke_percent.toFixed(1);
+        updateBar(document.getElementById("strokeBar"), data.valve_stroke_percent, "var(--blue)");
+
+        // Status
+        const profibusEl = document.getElementById("profibusValue");
+        profibusEl.textContent = data.profibus_status;
+        profibusEl.style.color = data.profibus_status === "OK" ? "var(--green)" : "var(--red)";
+
+        document.getElementById("notesValue").textContent = data.notes || "—";
+
+        const ts = new Date(data.timestamp * 1000);
+        document.getElementById("lastUpdate").textContent = ts.toLocaleTimeString();
+
+      } catch (err) {
+        document.getElementById("errorBox").style.display = "block";
+        document.getElementById("connectionStatus").textContent = "Disconnected";
+        document.getElementById("liveDot").style.background = "var(--red)";
+      }
+    }
+
+    // Initial load + poll every second
+    fetchData();
+    setInterval(fetchData, 1000);
+  </script>
+</body>
+</html>
