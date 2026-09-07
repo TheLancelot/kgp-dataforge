@@ -177,6 +177,20 @@ Rules:
             "sop_excerpt": snippet[:2000],
         }
 
+    @function_tool()
+    async def list_available_sops(
+        self,
+        context: RunContext,
+    ) -> dict[str, Any]:
+        """List all Standard Operating Procedures (SOPs) currently available.
+
+        Use this when the worker asks what procedures exist, isn't sure of the
+        exact process name, or when get_sop_info fails to find a match.
+        """
+        index = _load_sop_index()
+        if not index:
+            return {"error": "No SOPs are currently loaded."}
+        return {"available_sops": sorted(index.keys())}
 
 def prewarm(proc: JobProcess):
     proc.userdata["vad"] = silero.VAD.load()
