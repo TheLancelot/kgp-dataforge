@@ -3,6 +3,9 @@
 livekit-agents[google,rime,silero,turn-detector]
 livekit-plugins-noise-cancellation 
 python-dotenv
+langfuse
+opentelemetry-sdk
 uvicorn 
 fastapi
 # python -m livekit.agents download-files
+pypdf
