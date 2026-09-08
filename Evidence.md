@@ -123,11 +123,11 @@ When the agent needs to perform multi-step reasoning or call tools, it remains r
 
 **Terminal 1 – Mock SCADA**
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m uvicorn api.scada:app --host 0.0.0.0 --port 8000 --reload```
+python -m uvicorn api.scada:app --host 0.0.0.0 --port 8000 --reload
+```
 
 **Terminal 2 - LiveKit Agent**
-```.\.venv\Scripts\Activate.ps1
+```powershell
 cd app
-python final_agent.py console```
+python final_agent.py console
+```
