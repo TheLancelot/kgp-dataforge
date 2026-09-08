@@ -9,7 +9,7 @@ The commands below are for Windows PowerShell and should be run from the reposit
 ### 1. Create and activate a virtual environment
 
 ```powershell
-py -m venv .venv
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 ```
@@ -69,8 +69,6 @@ LANGFUSE_SECRET_KEY=your_langfuse_secret_key
 LANGFUSE_BASE_URL=https://cloud.langfuse.com
 ```
 
-`final_agent.py` loads this file with `load_dotenv("../.env")`, so the agent must be started from the `livekit-nk` directory. The `.env` file is ignored by Git; do not paste real keys into the README, source files, screenshots, or issue reports.
-
 ### 5. Start the agent
 
 Start the SCADA API in a separate terminal from the repository root:
@@ -79,11 +77,11 @@ Start the SCADA API in a separate terminal from the repository root:
 python -m uvicorn api.scada:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-In another terminal, activate the same virtual environment, move into `livekit-nk`, and start ForgeGuide in console mode:
+In another terminal, activate the same virtual environment, move into `app`, and start ForgeGuide in console mode:
 
 ```powershell
-cd livekit-nk
+cd app
 python final_agent.py console
 ```
 
-The agent will connect to LiveKit, wait for a participant, and greet the technician. The `docs` directory must remain beside `final_agent.py` so the SOPs can be loaded.
+The agent will connect to LiveKit, wait for a participant, and greet the technician. 

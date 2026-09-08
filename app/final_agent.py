@@ -58,7 +58,7 @@ logger = logging.getLogger("factory-agent")
 logger.setLevel(logging.INFO)
 
 SCADA_BASE_URL = "http://localhost:8000"
-SOP_DOCS_DIR = "./docs"  # folder of SOP PDFs, filename ~ process name
+SOP_DOCS_DIR = "../.docs"  # folder of SOP PDFs, filename ~ process name
 
 # --- Simple in-memory SOP index (no vector DB, just text + filenames) ---
 _sop_cache: dict[str, str] = {}
