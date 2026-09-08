@@ -13,21 +13,35 @@
       <h1>W&S Unit • Hydraulic Valve</h1>
       <span>Continuous Casting • Live SCADA Mock</span>
     </div>
-    <div class="status-pill">
-      <div class="status-dot" id="liveDot"></div>
-      <span id="connectionStatus">Connecting...</span>
+    <div class="header-right">
+      <div class="mode-pill" id="modePill">
+        <span id="systemMode">--</span>
+      </div>
+      <div class="status-pill">
+        <div class="status-dot" id="liveDot"></div>
+        <span id="connectionStatus">Connecting...</span>
+      </div>
     </div>
   </header>
 
   <div class="error" id="errorBox">
-    Cannot reach SCADA API. Make sure <code>mock_scada.py</code> is running on port 8000.
+    Cannot reach SCADA API. Make sure <code>scada.py</code> is running on port 8000.
+  </div>
+
+  <!-- DEMO / STRESS-TEST CONTROL PANEL -->
+  <div class="demo-bar">
+    <span class="demo-label">Demo Controls</span>
+    <button class="demo-btn loto" id="btnLoto">Apply Lockout / Tagout</button>
+    <button class="demo-btn anomaly" id="btnAnomaly">⚠ Inject Anomaly</button>
+    <button class="demo-btn reset" id="btnReset">Reset System</button>
+    <span class="demo-hint">These inject real plant states the agent must detect live.</span>
   </div>
 
   <div class="grid">
     <!-- Hydraulic Pressure -->
     <div class="card">
       <div class="card-header">
-        <div class="card-title">Hydraulic Pressure</div>
+        <div class="card-title">Hydraulic Pressure (Main HPU)</div>
         <div class="badge ok" id="pressureBadge">Normal</div>
       </div>
       <div class="value-row">
@@ -39,7 +53,7 @@
       </div>
       <div class="range">
         <span>0</span>
-        <span>180 bar</span>
+        <span>250 bar</span>
       </div>
     </div>
 
@@ -130,6 +144,10 @@
           <div class="val" id="profibusValue">--</div>
         </div>
         <div class="status-item">
+          <div class="label">System Mode</div>
+          <div class="val" id="systemModeVal">--</div>
+        </div>
+        <div class="status-item">
           <div class="label">Notes</div>
           <div class="val" id="notesValue" style="font-size:0.95rem;">--</div>
         </div>
@@ -140,7 +158,5 @@
       </div>
     </div>
   </div>
-
-
 </body>
 </html>
