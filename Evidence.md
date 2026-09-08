@@ -121,7 +121,7 @@ When the agent needs to perform multi-step reasoning or call tools, it remains r
 
 ## How to Reproduce the Full Demo Environment
 
-**Terminal 1 – Mock SCADA**
+**Terminal 1 – Mock SCADA UI**
 ```powershell
 python -m uvicorn api.scada:app --host 0.0.0.0 --port 8000 --reload
 ```
