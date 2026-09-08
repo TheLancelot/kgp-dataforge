@@ -1,11 +1,15 @@
+# Install the LiveKit CLI separately with:
 # winget install LiveKit.LiveKitCLI
 
-livekit-agents[google,rime,silero,turn-detector]
-livekit-plugins-noise-cancellation 
-python-dotenv
-langfuse
-opentelemetry-sdk
-uvicorn 
-fastapi
+livekit-agents[google,rime,silero,turn-detector]==1.7.1
+livekit-plugins-noise-cancellation==0.3.0
+python-dotenv==1.2.2
+langfuse==4.10.0
+opentelemetry-sdk==1.44.0
+uvicorn==0.49.0
+fastapi==0.141.1
+pypdf==6.17.0
+httpx==0.28.1
+
+# Download LiveKit's local model files after installation:
 # python -m livekit.agents download-files
-pypdf
