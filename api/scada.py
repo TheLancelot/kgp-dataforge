@@ -46,7 +46,7 @@ DEMO = {
     "mode_since": time.time(),
     "return_mode": "locked_out",  # where to go after an anomaly self-clears
     "anomaly_peak": 215.0,
-    "anomaly_duration": 30.0,
+    "anomaly_duration": 900.0,
 }
 
 
@@ -189,7 +189,7 @@ def demo_anomaly(peak: Optional[float] = None, duration: Optional[float] = None)
         DEMO["mode"] = "anomaly"
         DEMO["mode_since"] = time.time()
         DEMO["anomaly_peak"] = peak if peak is not None else round(random.uniform(205, 230), 1)
-        DEMO["anomaly_duration"] = duration if duration is not None else round(random.uniform(25, 35), 1)
+        DEMO["anomaly_duration"] = duration if duration is not None else round(random.uniform(2500, 3500), 1)
     return {
         "ok": True,
         "mode": "anomaly",

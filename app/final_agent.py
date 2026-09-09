@@ -58,7 +58,7 @@ logger = logging.getLogger("factory-agent")
 logger.setLevel(logging.INFO)
 
 SCADA_BASE_URL = "http://localhost:8000"
-SOP_DOCS_DIR = "../.docs"  # folder of SOP PDFs, filename ~ process name
+SOP_DOCS_DIR = "../docs"  # folder of SOP PDFs, filename ~ process name
 
 # --- Simple in-memory SOP index (no vector DB, just text + filenames) ---
 _sop_cache: dict[str, str] = {}
@@ -115,17 +115,18 @@ SOP HANDLING
 LIVE SAFETY MONITORING (this is your most important job)
 - If the worker asks about any reading, pressure, temperature, or whether
   something "looks normal", call get_scada_reading first and answer from the live value.
-- IMPORTANT: whenever the worker announces or performs a physical action that
+
+- important: whenever the worker announces or performs a physical action that
   changes the machine's state - for example applying lockout/tagout, isolating an
   accumulator, opening/closing a valve, bleeding a line, or energizing equipment -
   immediately call get_scada_reading to verify the machine actually responded the
   way the current SOP step expects.
 - Reason about the reading in context. For example: after lockout, hydraulic
   pressure should fall toward zero; while bleeding a line, pressure must keep
-  dropping, never rise. A FAULT bus status or an active alarm is never normal.
+  dropping, never rise. A fault bus status or an active alarm is never normal.
 - If a live reading is unsafe or contradicts what the step expects (e.g. pressure
-  spiking when it should be dropping), INTERRUPT immediately: tell the worker to
-  STOP, tell them the specific corrective action (close the valve, step back from
+  spiking when it should be dropping), interrupt them immediately: tell the worker to
+  stop by alerting them (in lowercase), tell them the specific corrective action (close the valve, step back from
   the block), and do NOT advance to the next step. Recommend escalating to a
   supervisor and say you are logging the anomaly.
 - Only resume the procedure once live readings confirm it is safe to continue.
@@ -233,7 +234,13 @@ async def entrypoint(ctx: JobContext):
             extra_kwargs={"max_completion_tokens": 1000},
         ),
         stt=inference.STT(model="google/gemini-3.5-transcribe-live"),
-        tts=inference.TTS(model="rime/coda", voice="celeste", language="en"),
+        tts=inference.TTS(
+            model="rime/coda",
+            voice="celesete",
+            language="en",
+            # extra_kwargs={"time_scale_factor": 0.9}
+  
+        ),
         vad=ctx.proc.userdata["vad"],
         turn_detection=MultilingualModel(),
     )
