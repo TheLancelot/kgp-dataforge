@@ -112,7 +112,7 @@ async function fetchData() {
     applyMode(data.system_mode, data.alarm);
 
     const ts = new Date(data.timestamp * 1000);
-    document.getElementById("lastUpdate").textContent = ts.toLocaleTimeString();
+    document.getElementById("lastUpdate").textContent = "SCADA Data Dashboard";
 
   } catch (err) {
     document.getElementById("errorBox").style.display = "block";

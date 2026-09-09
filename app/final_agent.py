@@ -236,9 +236,9 @@ async def entrypoint(ctx: JobContext):
         stt=inference.STT(model="google/gemini-3.5-transcribe-live"),
         tts=inference.TTS(
             model="rime/coda",
-            voice="celesete",
+            voice="celeste",
             language="en",
-            # extra_kwargs={"time_scale_factor": 0.9}
+            extra_kwargs={"time_scale_factor": 0.9}
   
         ),
         vad=ctx.proc.userdata["vad"],
