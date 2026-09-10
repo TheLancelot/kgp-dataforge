@@ -1,6 +1,6 @@
 # EVIDENCE.md
 
-**Project:** ForgeGuide – Voice-native guidance agent for continuous-caster maintenance workflows.  
+**Project:** Core – Voice-native guidance agent for continuous-caster maintenance workflows.  
 **Track:** Rime (Realtime Voice).  
 
 This document provides evidence for the hard voice claims made by the system. It follows the required structure: hard voice claim → acceptance test → procedure → result → limitations, with repeatable commands and fixtures mapped directly to the repository structure.
@@ -27,7 +27,7 @@ This is critical in a steel-plant environment where a sudden pressure rise, temp
 ### Procedure (Repeatable)
 1. Start the SCADA API in a terminal from the repository root:
    `python -m uvicorn api.scada:app --host 0.0.0.0 --port 8000 --reload`.
-2. In another terminal, activate the virtual environment, move into the `app` directory, and start ForgeGuide in console mode:
+2. In another terminal, activate the virtual environment, move into the `app` directory, and start Core in console mode:
    `python final_agent.py console`.
 3. Trigger a long response from the agent by asking it to explain a multi-step SOP procedure using the `get_sop_info` tool.
 4. While the agent is speaking, interrupt with one of the anomaly phrases above.
@@ -123,6 +123,7 @@ When the agent needs to perform multi-step reasoning or call tools, it remains r
 
 **Terminal 1 – Mock SCADA UI**
 ```powershell
+cd src
 python -m uvicorn api.scada:app --host 0.0.0.0 --port 8000 --reload
 ```
 

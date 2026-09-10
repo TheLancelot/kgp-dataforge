@@ -103,7 +103,7 @@ async def entrypoint(ctx: JobContext):
     )
 
     # First message when the user joins
-    await session.say("Hey I am your agent, at your service")
+    await session.say("Hey! How are you Tushar? Are you enjoying poker")
 
 if __name__ == "__main__":
     cli.run_app(

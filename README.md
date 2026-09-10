@@ -1,6 +1,34 @@
-# Core
+**Core**  
+Voice-native guidance agent for continuous maintenance workflows and processes in industrial environments
 
-Voice-native guidance agent for continuous-caster maintenance workflows. ForgeGuide combines LiveKit realtime voice transport, Gemini speech and reasoning, Rime text-to-speech, live SCADA readings, and SOP document lookup.
+### Target User
+Less-experienced technicians working on the Withdrawal & Straightening (W&S) unit of a continuous casting line in a steel plant. These technicians operate in hot, noisy, high-risk environments where their hands are often occupied, screens are impractical, and procedural mistakes can cause serious safety incidents or costly downtime.
+
+### Problem
+Complex maintenance tasks such as hydraulic valve replacement require strict adherence to multi-step Standard Operating Procedures and rapid reaction to real-time process anomalies (stuck pressure gauges, overheating manifolds, drifting pinch rolls, communication faults, etc.).  
+
+Less-trained technicians frequently lack complete procedural knowledge and cannot safely consult paper checklists or tablet interfaces while working. Radio calls to supervisors introduce delay. Existing digital tools fail because they are not hands-free, not interruptible, and not tightly coupled to live plant data.
+
+### Why Voice Is Essential
+In this environment, speech is the only practical primary interface. Removing spoken guidance would make the product materially worse: the technician’s hands and eyes are already committed to the physical task. A chatbot with a play button or a screen-based checklist is unusable under real plant conditions.
+
+### Solution Overview
+Core is a realtime voice agent that acts as an interruptible co-pilot for the technician. It:
+
+- Guides the user step-by-step through maintenance SOPs
+- Continuously listens for anomaly statements and triggers the corresponding emergency override from a deterministic rulebook
+- Retrieves live sensor readings (pressure, temperature, accumulator, roll position, valve stroke, Profibus status) from a mock SCADA system via tools
+- Responds in the same language the technician is speaking (including mid-conversation code-switching)
+- Stays fully interruptible — any barge-in immediately stops Rime audio and reorients the conversation
+- Remains responsive while performing tool calls or multi-step reasoning
+
+The system is built on LiveKit Agents for realtime transport and turn handling, Gemini for speech recognition and reasoning, and Rime (`coda` voice) as the primary spoken output.
+
+### Hard Voice Problems Addressed
+- **Interruption + conversation continuity** during tool work and mid-speech barge-ins
+- **Language routing / code-switching**
+- **Robustness under factory noise**
+- **Graceful latency handling** while querying live data and documents
 
 ## Python Setup
 
@@ -74,10 +102,11 @@ LANGFUSE_BASE_URL=https://cloud.langfuse.com
 Start the SCADA API in a separate terminal from the repository root:
 
 ```powershell
+cd src
 python -m uvicorn api.scada:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-In another terminal, activate the same virtual environment, move into `app`, and start ForgeGuide in console mode:
+In another terminal, activate the same virtual environment, move into `app`, and start Core in console mode:
 
 ```powershell
 cd app
