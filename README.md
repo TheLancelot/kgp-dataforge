@@ -1,4 +1,4 @@
-**Core**  
+### Core  
 Voice-native guidance agent for continuous maintenance workflows and processes in industrial environments
 
 ### Target User
