@@ -18,7 +18,7 @@ This is critical in a steel-plant environment where a sudden pressure rise, temp
 
 ### Acceptance Test
 1. Agent begins speaking a multi-sentence SOP guidance response.
-2. While audio is still playing, the user speaks an interrupting phrase such as: “Stop — pressure is rising” or “Abort, temperature too high”.
+2. While audio is still playing, the user speaks an interrupting phrase such as: “Stop - pressure is rising” or “Abort, temperature too high”.
 3. Expected:
    * Audio ceases within 300 ms of the start of user speech.
    * No residual / buffered Rime audio is heard after interruption.

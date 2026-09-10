@@ -19,7 +19,7 @@ Core is a realtime voice agent that acts as an interruptible co-pilot for the te
 - Continuously listens for anomaly statements and triggers the corresponding emergency override from a deterministic rulebook
 - Retrieves live sensor readings (pressure, temperature, accumulator, roll position, valve stroke, Profibus status) from a mock SCADA system via tools
 - Responds in the same language the technician is speaking (including mid-conversation code-switching)
-- Stays fully interruptible — any barge-in immediately stops Rime audio and reorients the conversation
+- Stays fully interruptible - any barge-in immediately stops Rime audio and reorients the conversation
 - Remains responsive while performing tool calls or multi-step reasoning
 
 The system is built on LiveKit Agents for realtime transport and turn handling, Gemini for speech recognition and reasoning, and Rime (`coda` voice) as the primary spoken output.
