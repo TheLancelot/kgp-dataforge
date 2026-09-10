@@ -1,4 +1,4 @@
-# ForgeGuide
+# Core
 
 Voice-native guidance agent for continuous-caster maintenance workflows. ForgeGuide combines LiveKit realtime voice transport, Gemini speech and reasoning, Rime text-to-speech, live SCADA readings, and SOP document lookup.
 
@@ -85,3 +85,17 @@ python final_agent.py console
 ```
 
 The agent will connect to LiveKit, wait for a participant, and greet the technician. 
+
+### 6. Try the Demo Script
+
+To truly see how Core works—especially its ability to handle sudden interruptions and fetch live sensor data—we highly recommend using our demo script! You can read the user prompts below aloud to the agent to test the workflow firsthand and see how it reacts.
+
+**Demo Flow:**
+* **You:** "Hey, I need to do some maintenance on the caster today. Can you list the available standard operating procedures?"
+* **Agent:** *(Lists procedures like W and S Unit Hydraulic Valve Replacement)*
+* **You:** "Let's execute the W and S Unit Hydraulic Valve Replacement. Start walking me through the procedure."
+* **You:** *(While the agent is reading Step 2, interrupt it loudly)* "Wait, stop right there. Before I apply the lockout tagout, what is the live pressure reading on the SCADA dashboard?"
+
+Once you interrupt, the agent will instantly halt its speech, fetch the live SCADA data, and await your confirmation before proceeding. 
+
+**Bonus Test:** Feel free to go off-script and throw in your own sudden safety hazards (for example, shouting *"Stop, there is a fire!"*) to test how the agent handles emergency protocols and abandons the standard SOP.
